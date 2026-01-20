@@ -1,0 +1,16 @@
+# Frontend Vite en dev (port 5173)
+blog.localhost {
+    reverse_proxy frontend:5173
+    log {
+        output file /data/logs/frontend.log
+    }
+}
+
+# Backend Flask
+api.blog.localhost {
+    reverse_proxy backend:8000
+    encode gzip
+    log {
+        output file /data/logs/backend.log
+    }
+}

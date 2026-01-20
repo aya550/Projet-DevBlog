@@ -1,0 +1,31 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:2026.1.1
+    container_name: cloudflared
+    user: "1000:1000"
+    environment: -PUID=1000
+      -PGID=1000
+      TZ=Europe/Paris
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.10
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - public
+    restart: unless-stopped
+
+networks:
+  public:
+    name: public
+    external: true
